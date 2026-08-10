@@ -31,18 +31,21 @@ def test_build_results_marks_found_flags(conn):
     assert results[0].word == "cat"
     assert results[0].translation == "猫"
     assert results[0].example == "There is a cat."
+    assert results[0].sentence_id == 1
     assert results[0].translation_found is True
     assert results[0].example_found is True
 
     assert results[1].word == "give up"
     assert results[1].translation == "あきらめる"
     assert results[1].example is None
+    assert results[1].sentence_id is None
     assert results[1].translation_found is True
     assert results[1].example_found is False
 
     assert results[2].word == "xenodochial"
     assert results[2].translation is None
     assert results[2].example is None
+    assert results[2].sentence_id is None
     assert results[2].translation_found is False
     assert results[2].example_found is False
 

@@ -36,16 +36,17 @@ Content-Type: application/json
 ```json
 {
   "results": [
-    { "word": "run", "translation": "走る / 経営する / ...", "example": "She runs every morning.", "translation_found": true, "example_found": true },
-    { "word": "give up", "translation": "あきらめる", "example": null, "translation_found": true, "example_found": false },
-    { "word": "listen", "translation": "聞く", "example": "Listen to me carefully.", "translation_found": true, "example_found": true },
-    { "word": "xenodochial", "translation": null, "example": null, "translation_found": false, "example_found": false }
+    { "word": "run", "translation": "走る / 経営する / ...", "example": "She runs every morning.", "sentence_id": 1, "translation_found": true, "example_found": true },
+    { "word": "give up", "translation": "あきらめる", "example": null, "sentence_id": null, "translation_found": true, "example_found": false },
+    { "word": "listen", "translation": "聞く", "example": "Listen to me carefully.", "sentence_id": 2, "translation_found": true, "example_found": true },
+    { "word": "xenodochial", "translation": null, "example": null, "sentence_id": null, "translation_found": false, "example_found": false }
   ],
   "count": 4
 }
 ```
 
 - `translation` / `example` は見つからない場合 `null`。
+- `sentence_id` はTatoebaの文ID。例文が見つかった場合のみ数値が入り、フロントエンドが `https://tatoeba.org/en/sentences/show/{sentence_id}` へのリンクを生成するために使う（見つからない場合は `null`）。
 - `translation_found` / `example_found` はフロントエンドがプレビュー上で「見つからなかった単語」を視覚的に示すためのフラグ。
 - 入力に重複する単語が含まれる場合、重複したまま複数行として返す（「行を消さない」という要件どおり）。
 
