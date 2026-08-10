@@ -1,11 +1,11 @@
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
+from app.db.connection import ensure_db_exists, open_connection
 from app.routers import export, lookup
 
 settings = get_settings()
@@ -13,12 +13,13 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    if not Path(settings.DB_PATH).exists():
-        raise RuntimeError(
-            f"DB_PATH '{settings.DB_PATH}' が見つかりません。"
-            "scripts/build_data.py で ejcsv.db をビルドしてから起動してください。"
-        )
-    yield
+    ensure_db_exists()
+    connection = open_connection()
+    app.state.db_connection = connection
+    try:
+        yield
+    finally:
+        connection.close()
 
 
 app = FastAPI(lifespan=lifespan)
