@@ -11,19 +11,41 @@
 
 ## ステータス
 
-現在はプロジェクトの設計ドキュメント整備段階です。`frontend/`・`backend/` の実装はこれから行います。
+データビルド（EJDict/Tatoeba → SQLite）・バックエンドAPI（FastAPI）・フロントエンド（Next.js UI + APIルート）の実装、および両者のテスト（pytest / Vitest）整備は完了しています。残る作業はVercel/Renderへのデプロイです。
 
-## セットアップ（実装後に整備）
+## セットアップ
 
 ```bash
-# フロントエンド
-cd frontend && npm install && npm run dev
-
 # バックエンド
-cd backend && pip install -e . && python scripts/build_data.py && uvicorn app.main:app --reload
+cd backend
+pip install -e .
+./scripts/fetch_raw_data.sh  # EJDict/Tatoebaの生データをdata/raw/に取得
+python scripts/build_data.py \
+  --ejdict-dir data/raw/ejdict/src \
+  --tatoeba-file data/raw/tatoeba/eng_sentences.tsv \
+  --out data/build/ejcsv.db
+uvicorn app.main:app --reload
+
+# フロントエンド（別ターミナル）
+cd frontend
+npm install
+cp .env.example .env.local  # FASTAPI_BASE_URLをバックエンドの起動先に合わせて編集
+npm run dev
 ```
 
-具体的な環境変数・データセットの取得手順は [docs/data-pipeline.md](./docs/data-pipeline.md) と [docs/deployment.md](./docs/deployment.md) を参照してください。
+[http://localhost:3000](http://localhost:3000) を開くと利用できます。具体的な環境変数・データセットの取得手順は [docs/data-pipeline.md](./docs/data-pipeline.md) と [docs/deployment.md](./docs/deployment.md) を参照してください。
+
+## テスト
+
+```bash
+# バックエンド
+cd backend && pip install -e ".[dev]" && pytest
+
+# フロントエンド
+cd frontend && npm test
+```
+
+テスト方針の詳細は [docs/testing.md](./docs/testing.md) を参照してください。
 
 ## ブランチ命名規則
 
