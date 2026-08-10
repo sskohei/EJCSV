@@ -6,10 +6,11 @@ EJCSVのフロントエンド（Next.js App Router, TypeScript）。詳細は[�
 
 ```bash
 npm install
+cp .env.example .env.local  # FASTAPI_BASE_URLをバックエンドの起動先に合わせて編集
 npm run dev
 ```
 
-[http://localhost:3000](http://localhost:3000) を開く。
+[http://localhost:3000](http://localhost:3000) を開く。APIルート（`/api/lookup`, `/api/export/csv`）は`FASTAPI_BASE_URL`が指すFastAPIバックエンドへリクエストをプロキシする。
 
 ## その他のコマンド
 
