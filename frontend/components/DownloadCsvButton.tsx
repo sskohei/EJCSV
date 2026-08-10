@@ -22,7 +22,23 @@ export default function DownloadCsvButton({
   };
 
   return (
-    <button type="button" onClick={handleClick} disabled={disabled}>
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={disabled}
+      className="inline-flex items-center gap-2 rounded-lg border border-indigo-600 px-4 py-2 text-sm font-semibold text-indigo-600 transition-colors hover:bg-indigo-50 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none disabled:cursor-not-allowed disabled:border-slate-300 disabled:text-slate-400 disabled:hover:bg-transparent dark:hover:bg-indigo-950 dark:disabled:border-slate-700 dark:disabled:text-slate-600"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        className="size-4"
+        aria-hidden="true"
+      >
+        <path d="M10 12.5a.75.75 0 0 0 .75-.75V4a.75.75 0 0 0-1.5 0v7.75c0 .414.336.75.75.75Z" />
+        <path d="M5.72 8.47a.75.75 0 0 1 1.06 0L10 11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-3.75 3.75a.75.75 0 0 1-1.06 0L5.72 9.53a.75.75 0 0 1 0-1.06Z" />
+        <path d="M3.5 13.25a.75.75 0 0 1 .75.75v1.5c0 .414.336.75.75.75h10a.75.75 0 0 0 .75-.75v-1.5a.75.75 0 0 1 1.5 0v1.5A2.25 2.25 0 0 1 15 18H5a2.25 2.25 0 0 1-2.25-2.25v-1.5a.75.75 0 0 1 .75-.75Z" />
+      </svg>
       CSVダウンロード
     </button>
   );

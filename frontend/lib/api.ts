@@ -2,6 +2,7 @@ export type WordResult = {
   word: string;
   translation: string | null;
   example: string | null;
+  sentence_id: number | null;
   translation_found: boolean;
   example_found: boolean;
 };

@@ -9,6 +9,7 @@ class WordResult(BaseModel):
     word: str
     translation: str | None
     example: str | None
+    sentence_id: int | None = None
     translation_found: bool
     example_found: bool
 

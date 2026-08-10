@@ -21,11 +21,11 @@ def conn(tmp_path):
 
 
 def test_get_example_returns_matching_sentence(conn):
-    assert get_example(conn, "cat") == "There is a cat."
+    assert get_example(conn, "cat") == ("There is a cat.", 1)
 
 
 def test_get_example_is_case_insensitive(conn):
-    assert get_example(conn, "CAT") == "There is a cat."
+    assert get_example(conn, "CAT") == ("There is a cat.", 1)
 
 
 def test_get_example_returns_none_when_not_found(conn):
