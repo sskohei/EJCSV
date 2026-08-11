@@ -26,7 +26,7 @@ export default function DownloadCsvButton({
       type="button"
       onClick={handleClick}
       disabled={disabled}
-      className="inline-flex items-center gap-2 rounded-lg border border-indigo-600 px-4 py-2 text-sm font-semibold text-indigo-600 transition-colors hover:bg-indigo-50 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none disabled:cursor-not-allowed disabled:border-slate-300 disabled:text-slate-400 disabled:hover:bg-transparent dark:hover:bg-indigo-950 dark:disabled:border-slate-700 dark:disabled:text-slate-600"
+      className="font-heading inline-flex items-center gap-2 rounded-full border-2 border-red-400 bg-white px-5 py-2 text-sm font-semibold text-red-500 transition-all hover:-translate-y-0.5 hover:bg-red-50 hover:shadow-md hover:shadow-red-500/20 focus:ring-4 focus:ring-red-400/30 focus:outline-none active:translate-y-0 active:scale-95 disabled:translate-y-0 disabled:cursor-not-allowed disabled:border-stone-300 disabled:text-stone-400 disabled:shadow-none disabled:hover:bg-white dark:bg-stone-900 dark:hover:bg-stone-800 dark:disabled:border-stone-700 dark:disabled:bg-stone-900 dark:disabled:text-stone-600"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
