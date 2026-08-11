@@ -7,7 +7,7 @@
 - Next.js App Routerに対してゼロコンフィグでデプロイ可能。
 - GitHub連携で `main` へのマージ・PRごとのプレビューデプロイが自動化できる。
 - 無料枠がポートフォリオ用途として十分。
-- 環境変数 `FASTAPI_BASE_URL` をVercelのプロジェクト設定で登録する。**Production・Preview両方の環境**に設定しないと、PRごとのプレビューデプロイでバックエンドに疎通できない点に注意する。
+- 環境変数 `FASTAPI_BASE_URL` をVercelのプロジェクト設定で登録する。**Production・Preview両方の環境**に設定しないと、PRごとのプレビューデプロイでバックエンドに疎通できない点に注意する。値は **オリジンのみ**（例: `https://ejcsv-backend.onrender.com`）を設定し、末尾に `/api` を含めないこと（`/api/lookup` 等のパスはNext.js側のAPIルートが付与するため、`/api`を含めると `/api/api/lookup` のような不正なパスになりリクエストが404になる）。
 - 本リポジトリは `frontend/`・`backend/` が同居するモノレポ構成のため、Vercelのプロジェクト設定で **Root Directory を `frontend` に指定する**必要がある（未設定の場合、リポジトリルートにNext.jsアプリが無いため自動検出に失敗する）。
 
 ## バックエンド: Render（Dockerランタイム）
