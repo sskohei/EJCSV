@@ -4,6 +4,7 @@ import { useState } from "react";
 import WordInputForm from "@/components/WordInputForm";
 import ResultsTable from "@/components/ResultsTable";
 import DownloadCsvButton from "@/components/DownloadCsvButton";
+import AboutSection from "@/components/AboutSection";
 import AttributionFooter from "@/components/AttributionFooter";
 import { lookupWords, type WordResult } from "@/lib/api";
 
@@ -57,6 +58,8 @@ export default function Home() {
             <DownloadCsvButton text={text} disabled={results.length === 0} />
           </div>
         )}
+
+        <AboutSection />
       </main>
       <AttributionFooter />
     </div>
