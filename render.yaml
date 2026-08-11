@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: ejcsv-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    envVars:
+      - key: DB_PATH
+        value: data/build/ejcsv.db
+      - key: MAX_WORDS
+        value: "200"
+      - key: MAX_INPUT_CHARS
+        value: "10000"
+      - key: RATE_LIMIT
+        value: 20/minute
+      - key: ALLOWED_ORIGIN
+        sync: false
