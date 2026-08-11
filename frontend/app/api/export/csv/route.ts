@@ -10,18 +10,26 @@ export async function POST(request: NextRequest) {
   }
 
   const body = await request.text();
+  const targetUrl = `${baseUrl}/api/export/csv`;
 
   let response: Response;
   try {
-    response = await fetch(`${baseUrl}/api/export/csv`, {
+    response = await fetch(targetUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body,
     });
-  } catch {
+  } catch (error) {
+    console.error(`[api/export/csv] failed to reach ${targetUrl}:`, error);
     return NextResponse.json(
       { detail: "Failed to reach the backend." },
       { status: 502 },
+    );
+  }
+
+  if (!response.ok) {
+    console.error(
+      `[api/export/csv] backend responded with ${response.status} for ${targetUrl}`,
     );
   }
 
