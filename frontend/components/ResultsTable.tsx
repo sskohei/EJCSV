@@ -18,7 +18,7 @@ export default function ResultsTable({ results }: ResultsTableProps) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-3xl border-2 border-orange-100 bg-white shadow-lg shadow-red-500/5 dark:border-stone-800 dark:bg-stone-900">
+    <div className="overflow-x-auto rounded-[2rem] border-2 border-[#34313d] bg-white shadow-[5px_5px_0_#8ccbff] dark:border-stone-700 dark:bg-stone-900">
       <table className="w-full min-w-max text-left text-sm">
         <thead>
           <tr className="font-heading border-b-2 border-orange-100 text-xs font-semibold tracking-wide text-red-500 uppercase dark:border-stone-800 dark:text-red-400">

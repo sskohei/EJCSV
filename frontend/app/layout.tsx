@@ -30,7 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${fredoka.variable}`}
     >
-      <body className="min-h-screen bg-orange-50 font-sans text-stone-900 antialiased dark:bg-stone-950 dark:text-stone-100">
+      <body className="min-h-screen bg-[#fff8e8] font-sans text-[#34313d] antialiased dark:bg-stone-950 dark:text-stone-100">
         {children}
       </body>
     </html>
