@@ -18,12 +18,17 @@
 [SQLite: ejcsv.db]
     dictionary / sentences / word_examples テーブルへの読み取り専用点検索
     (Dockerイメージにビルド済みファイルとして同梱)
+
+[Supabase]
+    ├─ Supabase Auth（Google OAuth、セッション）
+    └─ PostgreSQL（ユーザーの検索履歴）
 ```
 
 - **フロントエンド (Next.js, Vercel)**: ユーザー入力の受付、結果プレビュー、CSVダウンロードのトリガー。ブラウザは常にNext.jsサーバーとだけ通信し、FastAPIバックエンドのURLはブラウザに露出しない。
 - **フロントエンドAPIルート（プロキシ）**: Next.jsのAPIルートがサーバーサイドでFastAPIバックエンドを呼び出す。これによりCORS設定が不要になり、バックエンドのAllow Originを絞れる。詳細は [docs/frontend.md](./frontend.md)。
 - **バックエンド (FastAPI, Render)**: 入力パース、辞書引き、例文引き、CSV生成のロジックを担う。詳細は [docs/backend.md](./backend.md)、APIコントラクトは [docs/api.md](./api.md)。
 - **データストア (SQLite)**: EJDictとTatoebaから事前ビルドした軽量なルックアップ用DB。リクエスト時にはインデックス済みの点検索のみを行い、生コーパス（約104MBのTatoeba生データ、2,033,133文）は一切ロードしない。ビルド方法は [docs/data-pipeline.md](./data-pipeline.md)。
+- **認証・履歴 (Supabase)**: Google OAuthとセッション管理はSupabase Auth、ユーザーの検索履歴はSupabase PostgreSQLで管理する。辞書用SQLiteは読み取り専用のまま変更せず、ユーザーデータを保存しない。履歴テーブルにはRow Level Security（RLS）を設定し、`auth.uid() = user_id`を満たす本人の行だけを読み書きできるようにする。
 
 ## 1回のlookupリクエストのライフサイクル
 
@@ -36,6 +41,9 @@
    - `app/services/sentence_service.py` 経由で `word_examples` テーブルを検索し、対応する例文を取得（見つからなければ `null`）。
 6. 結果のリストをJSONとしてNext.jsに返し、Next.jsがそのままブラウザに返す。
 7. ブラウザは結果をテーブルでプレビュー表示する。
-8. ユーザーが「CSVダウンロード」を押すと、ブラウザは同じ入力テキストを `POST /api/export/csv`（Next.js経由でFastAPIの同名エンドポイント）に送信し、返ってきた `text/csv` のBlobをファイルとして保存する。CSV生成時のロジック（ステップ4〜5相当）はlookupと共有の `lookup_service.py` を再利用し、`app/services/csv_service.py` がCSVバイト列への変換のみを担う。
+8. ログイン中の場合、Next.jsのAPIルートが検索結果のスナップショットをSupabase PostgreSQLへ保存する。未ログインの場合は保存しない。履歴保存に失敗しても検索結果は表示する。
+9. ユーザーが「CSVダウンロード」を押すと、ブラウザは同じ入力テキストを `POST /api/export/csv`（Next.js経由でFastAPIの同名エンドポイント）に送信し、返ってきた `text/csv` のBlobをファイルとして保存する。CSV生成時のロジック（ステップ4〜5相当）はlookupと共有の `lookup_service.py` を再利用し、`app/services/csv_service.py` がCSVバイト列への変換のみを担う。CSVダウンロードでは履歴を追加保存しない。
+
+履歴一覧・詳細・削除はNext.jsのAPIルートからSupabaseへアクセスして処理する。FastAPIは辞書・例文検索とCSV生成を担当し、SupabaseのユーザーDBには直接依存しない。
 
 詳細なリクエスト/レスポンス形式は [docs/api.md](./api.md) を参照。

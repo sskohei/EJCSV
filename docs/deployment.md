@@ -8,6 +8,7 @@
 - GitHub連携で `main` へのマージ・PRごとのプレビューデプロイが自動化できる。
 - 無料枠がポートフォリオ用途として十分。
 - 環境変数 `FASTAPI_BASE_URL` をVercelのプロジェクト設定で登録する。**Production・Preview両方の環境**に設定しないと、PRごとのプレビューデプロイでバックエンドに疎通できない点に注意する。値は **オリジンのみ**（例: `https://ejcsv-backend.onrender.com`）を設定し、末尾に `/api` を含めないこと（`/api/lookup` 等のパスはNext.js側のAPIルートが付与するため、`/api`を含めると `/api/api/lookup` のような不正なパスになりリクエストが404になる）。
+- Supabaseの `NEXT_PUBLIC_SUPABASE_URL` と `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` をVercelのProduction・Preview環境へ登録する。SupabaseのService Role Keyなどの秘密鍵はブラウザへ公開しない。
 - 本リポジトリは `frontend/`・`backend/` が同居するモノレポ構成のため、Vercelのプロジェクト設定で **Root Directory を `frontend` に指定する**必要がある（未設定の場合、リポジトリルートにNext.jsアプリが無いため自動検出に失敗する）。
 
 ## バックエンド: Render（Dockerランタイム）
@@ -26,6 +27,15 @@ Render（Webサービス、Dockerランタイム）を第一候補として推�
 ## CORS設定
 
 フロントエンドがNext.jsのAPIルート経由でバックエンドを呼び出す構成（[docs/frontend.md](./frontend.md)）のため、FastAPI側のCORS許可オリジンは `ALLOWED_ORIGIN`（Vercelのデプロイ先URL）のみに絞り込む。ブラウザから直接叩かれることを想定した緩いCORS設定は不要。
+
+## Supabase設定
+
+- Supabaseプロジェクトを作成し、Google Providerを有効化する。
+- Google Cloud Consoleに、Supabaseが指定するOAuth Callback URLを登録する。
+- `search_histories`テーブルを作成し、`user_id`にSupabase AuthのユーザーIDを保存する。
+- Row Level Security（RLS）を有効化し、`auth.uid() = user_id`の行だけをSELECT・INSERT・DELETEできるポリシーを設定する。
+- 開発環境と本番環境では、可能ならSupabaseプロジェクトを分ける。
+- 本番デプロイ前に、ログイン、履歴保存、履歴取得、履歴削除、ログアウト後のアクセス拒否を確認する。
 
 ## レート制限
 
