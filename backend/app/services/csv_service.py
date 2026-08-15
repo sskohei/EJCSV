@@ -3,8 +3,6 @@ import io
 
 from app.models.schemas import WordResult
 
-CSV_HEADER = ["word", "translation", "example_sentence"]
-
 
 def build_csv_bytes(results: list[WordResult]) -> bytes:
     buffer = io.StringIO()

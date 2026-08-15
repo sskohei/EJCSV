@@ -83,7 +83,7 @@ Content-Disposition: attachment; filename="ejcsv_20260810_143210.csv"
 
 | 項目 | 仕様 |
 |---|---|
-| ヘッダ行 | `word,translation,example_sentence` |
+| ヘッダ行 | なし（入力された結果の各行のみ） |
 | エンコーディング | UTF-8 with BOM（`utf-8-sig`）。Excel（特にWindows版）で日本語が文字化けしないようにするため |
 | クオーティング | Python標準 `csv.writer` の `QUOTE_MINIMAL`。訳語・例文にカンマ/引用符/改行が含まれる場合は自動でクオートされる |
 | 空欄の扱い | 訳語または例文が見つからない場合、そのセルは単に空文字列（`""`）。`N/A` 等の文字列は入れない |
