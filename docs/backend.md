@@ -46,7 +46,7 @@ backend/
 - `dictionary_service.py`: `SELECT translation FROM dictionary WHERE word = ?` の単純なラッパー。単語・フレーズの両方に対して同一のインターフェースで動作する。
 - `sentence_service.py`: `SELECT s.text FROM word_examples we JOIN sentences s ON we.sentence_id = s.id WHERE we.word = ?` の単純なラッパー。
 - `lookup_service.py`: 上記2つを束ね、入力単語リストから `list[WordResult]` を組み立てるオーケストレーション層。`/api/lookup` と `/api/export/csv` の両方から呼ばれる唯一の入口とし、ロジックの重複を避ける。
-- `csv_service.py`: `list[WordResult]` を受け取り、`csv.writer`（`QUOTE_MINIMAL`）でUTF-8 BOM付きバイト列を生成する。ヘッダ行・空欄ルールは [docs/api.md](./api.md) を参照。
+- `csv_service.py`: `list[WordResult]` を受け取り、ヘッダなしで `csv.writer`（`QUOTE_MINIMAL`）によるUTF-8 BOM付きバイト列を生成する。空欄ルールは [docs/api.md](./api.md) を参照。
 
 ## データベースアクセス方針
 
