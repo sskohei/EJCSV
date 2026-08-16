@@ -121,7 +121,7 @@ export default function HistoryPage() {
           <div>
             <Link
               href="/"
-              className="font-heading text-xs font-bold tracking-wide text-red-500 hover:underline dark:text-red-400"
+              className="font-heading text-xs font-bold tracking-wide text-red-500 hover:underline dark:text-red-400 cursor-pointer"
             >
               ← 検索画面へ戻る
             </Link>
@@ -189,7 +189,7 @@ export default function HistoryPage() {
                   <button
                     type="button"
                     onClick={() => void handleSelect(history.id)}
-                    className="min-w-0 flex-1 text-left"
+                    className="min-w-0 flex-1 cursor-pointer text-left"
                     aria-pressed={selectedId === history.id}
                   >
                     <span className="block truncate font-medium text-stone-900 dark:text-stone-100">
@@ -204,7 +204,7 @@ export default function HistoryPage() {
                     type="button"
                     onClick={() => void handleDelete(history.id)}
                     disabled={deletingId === history.id}
-                    className="shrink-0 rounded-full px-2 py-1 text-xs font-bold text-red-500 hover:bg-red-50 disabled:opacity-50 dark:hover:bg-red-950"
+                    className="shrink-0 cursor-pointer rounded-full px-2 py-1 text-xs font-bold text-red-500 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 dark:hover:bg-red-950"
                     aria-label={`${history.input_text}を削除`}
                   >
                     {deletingId === history.id ? "削除中…" : "削除"}

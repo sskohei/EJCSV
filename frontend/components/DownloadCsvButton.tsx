@@ -26,7 +26,7 @@ export default function DownloadCsvButton({
       type="button"
       onClick={handleClick}
       disabled={disabled}
-      className="font-heading inline-flex items-center gap-2 rounded-full border-2 border-[#34313d] bg-[#ffd84d] px-5 py-3 text-sm font-bold text-[#34313d] shadow-[4px_4px_0_#34313d] transition-all hover:-translate-y-0.5 hover:bg-[#ffe477] focus:ring-4 focus:ring-[#ffd84d]/40 focus:outline-none active:translate-y-0 active:shadow-[2px_2px_0_#34313d] disabled:translate-y-0 disabled:cursor-not-allowed disabled:border-stone-300 disabled:bg-stone-200 disabled:text-stone-400 disabled:shadow-none dark:border-stone-100 dark:bg-[#ffd84d] dark:text-[#34313d] dark:shadow-[4px_4px_0_#1c1917]"
+      className="cursor-pointer font-heading inline-flex items-center gap-2 rounded-full border-2 border-[#34313d] bg-[#ffd84d] px-5 py-3 text-sm font-bold text-[#34313d] shadow-[4px_4px_0_#34313d] transition-all hover:-translate-y-0.5 hover:bg-[#ffe477] focus:ring-4 focus:ring-[#ffd84d]/40 focus:outline-none active:translate-y-0 active:shadow-[2px_2px_0_#34313d] disabled:translate-y-0 disabled:cursor-not-allowed disabled:border-stone-300 disabled:bg-stone-200 disabled:text-stone-400 disabled:shadow-none dark:border-stone-100 dark:bg-[#ffd84d] dark:text-[#34313d] dark:shadow-[4px_4px_0_#1c1917]"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
