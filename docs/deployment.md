@@ -11,15 +11,24 @@
 - Supabaseの `NEXT_PUBLIC_SUPABASE_URL` と `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` をVercelのProduction・Preview環境へ登録する。SupabaseのService Role Keyなどの秘密鍵はブラウザへ公開しない。
 - 本リポジトリは `frontend/`・`backend/` が同居するモノレポ構成のため、Vercelのプロジェクト設定で **Root Directory を `frontend` に指定する**必要がある（未設定の場合、リポジトリルートにNext.jsアプリが無いため自動検出に失敗する）。
 
+Vercelの環境変数は次の組み合わせで登録する。
+
+| 変数                                   | Production |    Preview | 公開可否            |
+| -------------------------------------- | ---------: | ---------: | ------------------- |
+| `FASTAPI_BASE_URL`                     |       必須 |       必須 | サーバー側のみ      |
+| `NEXT_PUBLIC_SUPABASE_URL`             |       必須 |       必須 | 公開値              |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` |       必須 |       必須 | 公開キー（RLS前提） |
+| Supabase Service Role Key              | 登録しない | 登録しない | 秘密情報            |
+
 ## バックエンド: Render（Dockerランタイム）
 
 Render（Webサービス、Dockerランタイム）を第一候補として推奨する。Railway・Fly.ioとの比較:
 
-| 選択肢 | 判断 |
-|---|---|
+| 選択肢             | 判断                                                                                                                                                             |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Render**（採用） | SQLiteファイルをDockerイメージに同梱するだけで動作し、永続ボリューム等のマネージドDBが不要な本構成に適合。GitHub連携での自動デプロイ、環境変数のUI設定がシンプル |
-| Fly.io | 悪くない選択肢だが、`fly.toml`・`flyctl`・ボリューム管理など運用面の複雑さが本プロジェクトの規模に対して過剰 |
-| Railway | 従量課金がメインで、常時公開するポートフォリオ用途では費用の予測がしづらい |
+| Fly.io             | 悪くない選択肢だが、`fly.toml`・`flyctl`・ボリューム管理など運用面の複雑さが本プロジェクトの規模に対して過剰                                                     |
+| Railway            | 従量課金がメインで、常時公開するポートフォリオ用途では費用の予測がしづらい                                                                                       |
 
 - `Dockerfile`（バックエンド）: 依存関係のインストール → `app/` と（Git LFSで解決済みの）`data/build/ejcsv.db` をコピー → `uvicorn app.main:app --host 0.0.0.0 --port $PORT` で起動。
 - **無料枠の注意点**: Renderの無料Webサービスは約15分間アクセスがないとスリープし、次のリクエスト時に数秒のコールドスタートが発生する。ポートフォリオデモとしては許容範囲だが、本番SLAが必要な用途には不向きである旨を明記しておく。
@@ -31,11 +40,24 @@ Render（Webサービス、Dockerランタイム）を第一候補として推�
 ## Supabase設定
 
 - Supabaseプロジェクトを作成し、Google Providerを有効化する。
-- Google Cloud Consoleに、Supabaseが指定するOAuth Callback URLを登録する。
+- Google Cloud Consoleに、Supabase DashboardのAuthentication設定に表示されるOAuth Callback URLを登録する。
+- Supabase DashboardのAuthentication > URL Configurationに、ローカルの`http://localhost:3000/auth/callback`、Productionの`https://<production-domain>/auth/callback`、利用するPreview URLをRedirect URLとして登録する。Previewは実際のURLだけを登録し、不要なワイルドカードは追加しない。
+- Google ProviderのClient IDとClient SecretはSupabase Dashboardだけに登録し、Vercel環境変数やリポジトリには登録しない。
 - Supabase CLIで `supabase/migrations/` のマイグレーションを適用し、`search_histories`テーブルとRLSポリシーを作成する（例: `supabase db push`）。
 - マイグレーション適用後、`user_id`がSupabase AuthのユーザーIDに関連付けられ、本人の行だけをSELECT・INSERT・DELETEできることを確認する。
 - 開発環境と本番環境では、可能ならSupabaseプロジェクトを分ける。
 - 本番デプロイ前に、ログイン、履歴保存、履歴取得、履歴削除、ログアウト後のアクセス拒否を確認する。
+
+### デプロイ前チェックリスト
+
+- [ ] VercelのRoot Directoryが`frontend`になっている。
+- [ ] VercelのProduction・Previewに3つの公開／サーバー設定値が登録されている。
+- [ ] Google ProviderとOAuth Callback URLをSupabase／Google Cloud Consoleに登録している。
+- [ ] `search_histories`のマイグレーションとRLSを適用している。
+- [ ] Googleログイン、ログアウト、未ログイン検索、CSV出力を確認している。
+- [ ] A・Bの2ユーザーで履歴の保存・取得・削除の分離を確認している。
+- [ ] ログアウト後に`/api/history`が401になることを確認している。
+- [ ] Service Role KeyやGoogle Client Secretがクライアントバンドル・Git管理対象に含まれていない。
 
 ## レート制限
 
