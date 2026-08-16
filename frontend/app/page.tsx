@@ -6,6 +6,7 @@ import ResultsTable from "@/components/ResultsTable";
 import DownloadCsvButton from "@/components/DownloadCsvButton";
 import AboutSection from "@/components/AboutSection";
 import AttributionFooter from "@/components/AttributionFooter";
+import AuthButton from "@/components/AuthButton";
 import { lookupWords, type WordResult } from "@/lib/api";
 
 export default function Home() {
@@ -58,6 +59,10 @@ export default function Home() {
             入力するだけで、訳語と例文つきのCSVを作れます。単語帳づくりを、もっと軽やかに。
           </p>
         </header>
+
+        <div className="flex justify-end">
+          <AuthButton />
+        </div>
 
         <WordInputForm onSubmit={handleSubmit} disabled={isLoading} />
 
