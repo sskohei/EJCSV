@@ -7,6 +7,7 @@ import DownloadCsvButton from "@/components/DownloadCsvButton";
 import AboutSection from "@/components/AboutSection";
 import AttributionFooter from "@/components/AttributionFooter";
 import AuthButton from "@/components/AuthButton";
+import Link from "next/link";
 import { lookupWords, type WordResult } from "@/lib/api";
 
 export default function Home() {
@@ -60,7 +61,13 @@ export default function Home() {
           </p>
         </header>
 
-        <div className="flex justify-end">
+        <div className="flex items-center justify-between gap-4">
+          <Link
+            href="/history"
+            className="font-heading rounded-full border-2 border-[#34313d] bg-white px-4 py-2 text-xs font-bold shadow-[2px_2px_0_#34313d] transition-transform hover:-translate-y-0.5 dark:border-stone-100 dark:bg-stone-900 dark:shadow-[2px_2px_0_#1c1917]"
+          >
+            検索履歴
+          </Link>
           <AuthButton />
         </div>
 

@@ -28,6 +28,10 @@ venv/
 # EJDict/Tatoebaの生データ（再ダウンロード可能なため追跡しない）
 backend/data/raw/
 
+# Supabase CLIのローカル生成ファイル
+supabase/.branches/
+supabase/.temp/
+
 # OS / エディタ
 .DS_Store
 .vscode/
