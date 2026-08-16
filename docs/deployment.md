@@ -32,8 +32,8 @@ Render（Webサービス、Dockerランタイム）を第一候補として推�
 
 - Supabaseプロジェクトを作成し、Google Providerを有効化する。
 - Google Cloud Consoleに、Supabaseが指定するOAuth Callback URLを登録する。
-- `search_histories`テーブルを作成し、`user_id`にSupabase AuthのユーザーIDを保存する。
-- Row Level Security（RLS）を有効化し、`auth.uid() = user_id`の行だけをSELECT・INSERT・DELETEできるポリシーを設定する。
+- Supabase CLIで `supabase/migrations/` のマイグレーションを適用し、`search_histories`テーブルとRLSポリシーを作成する（例: `supabase db push`）。
+- マイグレーション適用後、`user_id`がSupabase AuthのユーザーIDに関連付けられ、本人の行だけをSELECT・INSERT・DELETEできることを確認する。
 - 開発環境と本番環境では、可能ならSupabaseプロジェクトを分ける。
 - 本番デプロイ前に、ログイン、履歴保存、履歴取得、履歴削除、ログアウト後のアクセス拒否を確認する。
 
