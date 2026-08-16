@@ -32,6 +32,50 @@
 - RLSにより、別ユーザーの履歴を取得・削除できないことを確認する。
 - 履歴保存が失敗しても、検索結果表示とCSV出力が失敗しないことを確認する。
 
+### 自動テストの対応範囲
+
+フロントエンドのVitestでは、Supabase SDKとNext.js APIルートをモックし、外部サービスの認証情報に依存せず次の挙動を検証する。
+
+| 対象                | 確認内容                                                                       |
+| ------------------- | ------------------------------------------------------------------------------ |
+| `AuthButton`        | Googleログイン開始、ログアウト、セッション取得失敗、未設定時の無効化           |
+| `/auth/callback`    | OAuthコード交換後のリダイレクト、外部URLへのオープンリダイレクト防止、交換失敗 |
+| `/api/lookup`       | 認証済み検索の保存、未認証時の未保存、履歴保存失敗時の検索継続                 |
+| `/api/history`      | 未認証401、本人の一覧取得、新しい順の指定                                      |
+| `/api/history/{id}` | 本人の詳細取得・削除、他ユーザー／不存在IDの404、未認証401                     |
+| `/history`          | 一覧、詳細再表示、削除、空状態、認証切れ、取得失敗                             |
+
+```bash
+cd frontend
+npm test
+npm run lint
+npx tsc --noEmit
+```
+
+### RLSの手動確認
+
+RLSはSupabaseプロジェクトの認証セッションを使うため、リリース前に実環境またはローカルSupabaseで次を確認する。ユーザーA・Bは別Googleアカウントを使う。
+
+1. Aでログインして検索し、履歴一覧にAの履歴が表示されることを確認する。
+2. Bでログインして、Bの履歴一覧にAの履歴が表示されないことを確認する。
+3. Aの履歴IDを指定した詳細取得・削除リクエストをBのセッションから実行し、404または対象なしとなり、Aの履歴が変更されないことを確認する。
+4. Aでログアウト後に履歴一覧・詳細・削除を実行し、401になることを確認する。
+5. Supabase SQL Editorで次を実行し、RLSと3ポリシーが存在することを確認する。
+
+```sql
+select relrowsecurity
+from pg_class
+where oid = 'public.search_histories'::regclass;
+
+select policyname, cmd
+from pg_policies
+where schemaname = 'public'
+  and tablename = 'search_histories'
+order by policyname;
+```
+
+`relrowsecurity`は`true`で、`SELECT`・`INSERT`・`DELETE`のポリシーが1件ずつ返ることを期待する。Service Role Keyを使った確認はRLSを迂回するため、ユーザー分離の検証には使用しない。
+
 ## CI（任意・nice-to-have）
 
 `.github/workflows/ci.yml` でプッシュ時に以下を実行することを検討する（ポートフォリオとしての完成度を示すシグナルとして有用だが、MVPの必須要件ではない）:
